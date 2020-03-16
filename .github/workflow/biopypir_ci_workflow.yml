@@ -1,0 +1,69 @@
+---
+name: BIOPYPIR-APPROVED
+on: [push,pull_request] 
+jobs:
+  build:
+    runs-on: ubuntu-latest 
+    strategy:
+      matrix:
+        python-version: [3.6,3.7] # exclude 3.5, mpl 3.x needs python>3.5
+        os: [macOS-latest, ubuntu-latest] 
+    steps:
+    - name: STEP 1. Check-Out Repo 
+      uses: actions/checkout@v2     
+    #===============================================#
+    - name: STEP 2. Set-Up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+      
+      
+    - name: custom linter
+      uses: benstear/python-pylint-github-action@master
+      id: linter
+      with:
+        package_name: desc
+        verbosity: score_only
+    - name: print output report
+      run: |
+        echo ${{ steps.linter.outputs.linting-report }}
+        echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+        cat pylint-report.txt
+    #===============================================#
+    - name: STEP 3. Install dependencies
+      run: |
+       pip install --upgrade pip setuptools wheel
+       pip install .
+       pip install python-coveralls
+       pip install coveralls
+       pip install junit2html
+       
+       
+    - name: Test Build
+      run: |
+        python3 setup.py test
+        ls -a
+        echo #################################
+        cd dist
+        ls -a
+        echo #################################
+        
+    #===============================================#
+    #- name: STEP 5. Pytest-ing and Code Coverage (gen_baseline_images.sh)
+    #  run: |
+    #    python setup.py test \
+    #         --addopts "--mpl-generate-path=tests/baseline_images \
+    #         --color=yes --cov-config .coveragerc --cov-branch \
+    #         --cov=scedar --junitxml=junitxml-doc.xml \
+    #         --ignore=tests/test_cluster/test_mirac_large_data.py"   
+    #    junit2html junitxml-doc.xml coverage-report.html
+    #===============================================#
+    - name: STEP 7. Zip Artifacts
+      run: |
+        zip artifacts.zip pylint-report.txt
+    #===============================================#
+    - name: Upload artifact
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: artifacts.zip
+        path: artifacts.zip
