@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest 
     strategy:
       matrix:
-        python-version: [3.5, 3.6,3.7] 
+        python-version: [3.5, 3.6] #,3.7] No py3.7, ERROR: No matching distribution  for tensorflow==1.7.0  
         os: [macOS-latest, ubuntu-latest] 
     steps:
     - name: STEP 1. Check-Out Repo 
