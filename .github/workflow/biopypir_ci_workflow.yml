@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest 
     strategy:
       matrix:
-        python-version: [3.6,3.7] # exclude 3.5, mpl 3.x needs python>3.5
+        python-version: [3.5, 3.6,3.7] 
         os: [macOS-latest, ubuntu-latest] 
     steps:
     - name: STEP 1. Check-Out Repo 
@@ -17,18 +17,13 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
       
-      
     - name: custom linter
       uses: benstear/python-pylint-github-action@master
       id: linter
       with:
         package_name: desc
         verbosity: score_only
-    - name: print output report
-      run: |
-        echo ${{ steps.linter.outputs.linting-report }}
-        echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-        cat pylint-report.txt
+
     #===============================================#
     - name: STEP 3. Install dependencies
       run: |
