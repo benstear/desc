@@ -1,0 +1,78 @@
+---
+name: BIOPYPIR-APPROVED
+on: [push,pull_request] 
+jobs:
+  build:
+    runs-on: ubuntu-latest 
+    strategy:
+      matrix:
+        python-version: [3.5,3.6,3.7] 
+        os: [macOS-latest, ubuntu-latest] 
+    steps:
+    - name: STEP 1. Check-Out Repo 
+      uses: actions/checkout@v2     
+    #===============================================#
+    - name: STEP 2. Set-Up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: custom linter
+      uses: benstear/python-pylint-github-action@master
+      id: linter
+      with:
+        package_name: desc
+        verbosity: score_only
+        
+    #===============================================#
+    - name: STEP 3. Install dependencies
+      run: |
+        pwd
+        pip install --upgrade pip setuptools wheel
+        pip install --no-binary :all: nmslib
+        pip install .
+        pip install pytest
+        pip install python-coveralls
+        pip install coveralls
+        pip install junit2html
+        
+    - name: simple pytest
+      run: python3 setup.py test
+    #===============================================#
+    #- name: STEP 5. Pytest-ing and Code Coverage (gen_baseline_images.sh)
+    #  run: |
+    #    python setup.py test \
+    #         --addopts "--mpl-generate-path=tests/baseline_images \
+    #         --color=yes --cov-config .coveragerc --cov-branch \
+    #         --cov=scedar --junitxml=junitxml-doc.xml \
+    #         --ignore=tests/test_cluster/test_mirac_large_data.py"   
+    #    junit2html junitxml-doc.xml coverage-report.html
+    #===============================================#
+    #- name: STEP 5.1 Pytest-ing and Code Coverage 2 (pytest_all.sh)
+    #  run: |
+    #    python setup.py test \
+    #        --addopts "--mpl --mpl-baseline-path=tests/baseline_images \
+    #        --color=yes --cov-config .coveragerc --cov-branch --cov=scedar --junitxml=junitxml-doc.xml"
+    #          junit2html junitxml-doc.xml coverage-report-2.html
+    #===============================================#
+    - name: STEP 6. Run Coveralls 
+      env:
+        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+        COVERALLS_PARALLEL: true
+      run: coveralls
+   #===============================================#
+    - name: coveralls finish
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        parallel-finished: true
+    #===============================================#
+    - name: STEP 7. Zip Artifacts
+      run: |
+        zip artifacts.zip coverage-report.html coverage-report-2.html pylint-report.txt
+    #${{ steps.linter.outputs.linting-report }}
+    #===============================================#
+    - name: Upload artifact
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: artifacts.zip
+        path: artifacts.zip
