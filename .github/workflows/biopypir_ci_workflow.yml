@@ -28,7 +28,9 @@ jobs:
     - name: STEP 3. Install dependencies
       run: |
        pip install --upgrade pip setuptools wheel
+       pip install tables
        pip install .
+       
        pip install python-coveralls
        pip install coveralls
        pip install junit2html
@@ -36,7 +38,7 @@ jobs:
        
     - name: Test Build
       run: |
-        python3 setup.py test --hdf5=/opt/local
+        python3 setup.py test
         ls -a
         echo #################################
         cd dist
