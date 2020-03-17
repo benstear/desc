@@ -43,16 +43,6 @@ jobs:
         ls -a
         echo #################################
         
-    #===============================================#
-    #- name: STEP 5. Pytest-ing and Code Coverage (gen_baseline_images.sh)
-    #  run: |
-    #    python setup.py test \
-    #         --addopts "--mpl-generate-path=tests/baseline_images \
-    #         --color=yes --cov-config .coveragerc --cov-branch \
-    #         --cov=scedar --junitxml=junitxml-doc.xml \
-    #         --ignore=tests/test_cluster/test_mirac_large_data.py"   
-    #    junit2html junitxml-doc.xml coverage-report.html
-    #===============================================#
     - name: STEP 7. Zip Artifacts
       run: |
         zip artifacts.zip pylint-report.txt
