@@ -28,7 +28,9 @@ jobs:
     - name: STEP 3. Install dependencies
       run: |
        pip install --upgrade pip setuptools wheel
-     #pip install .
+       apt-get install libhdf5-dev
+       echo '###############'
+       pip install .
        
      #pip install python-coveralls
      #pip install coveralls
