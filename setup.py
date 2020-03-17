@@ -23,7 +23,7 @@ setup(name = 'desc',
 				'scanpy',
 				'louvain',
 				'python-igraph',  
-				'h5py',
+				'h5py==2.5.0',
 				'pandas>=0.21', 
 				],
 			zip_safe = False
