@@ -28,10 +28,12 @@ jobs:
     - name: STEP 3. Install dependencies
       run: |
        pip install --upgrade pip setuptools wheel
-       sudo apt-get install libhdf5-dev
+       brew update
+       brew tap homebrew/science
+       brew install hdf5
        echo '###############'
        pip install .
-       
+     #sudo apt-get install libhdf5-dev
      #pip install python-coveralls
      #pip install coveralls
      #pip install junit2html
