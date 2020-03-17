@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest 
     strategy:
       matrix:
-        python-version: [3.5, 3.6] #,3.7] No py3.7, ERROR: No matching distribution  for tensorflow==1.7.0  
+        python-version: [3.5, 3.6, 3.7] #No py3.7, ERROR: No matching distribution  for tensorflow==1.7.0  
         os:  [ubuntu-latest] # [macOS-latest, macports version of HDF5 is bad
     steps:
     - name: STEP 1. Check-Out Repo 
