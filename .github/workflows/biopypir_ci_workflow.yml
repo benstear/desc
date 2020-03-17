@@ -27,11 +27,8 @@ jobs:
     #===============================================#
     - name: STEP 3. Install dependencies
       run: |
-       pwd
-       ls -a
-       echo "######################"
        pip install --upgrade pip setuptools wheel
-       pip install .
+     #pip install .
        
      #pip install python-coveralls
      #pip install coveralls
