@@ -16,14 +16,7 @@ jobs:
       uses: actions/setup-python@v1
       with:
         python-version: ${{ matrix.python-version }}
-      
-    - name: custom linter
-      uses: benstear/python-pylint-github-action@master
-      id: linter
-      with:
-        package_name: desc
-        verbosity: score_only
-
+        
     #===============================================#
     - name: STEP 3. Install dependencies
       run: |
